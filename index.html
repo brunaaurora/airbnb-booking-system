@@ -3,20 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airbnb Booking System</title>
+    <title>Booking System</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-        
         body {
             margin: 0;
             padding: 20px;
             background: transparent;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
@@ -29,6 +21,7 @@
             box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16);
             display: flex;
             gap: 40px;
+            margin: 0 auto;
         }
 
         .calendar-section {
@@ -38,307 +31,83 @@
 
         .booking-section {
             flex: 0 0 360px;
-            display: flex;
-            flex-direction: column;
         }
 
-        .title {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 32px;
-            color: #1a1a1a;
-            letter-spacing: -0.5px;
-        }
-
-        .date-selector {
-            padding: 16px;
-            background-color: #f9fafb;
-            border-radius: 12px;
-            margin-bottom: 24px;
-        }
-
-        .date-inputs {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            gap: 16px;
-        }
-
-        .date-input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            background: #fff;
-            transition: all 0.2s ease;
-        }
-
-        .date-input.active {
-            border-color: #0a1029;
-            background-color: #f0f1fd;
-        }
-
-        .date-label {
-            font-size: 12px;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-
-        .date-value {
-            font-size: 16px;
-            font-weight: 500;
-            color: #1a1a1a;
-        }
-
-        .nights-display {
-            font-size: 14px;
-            color: #6b7280;
-            text-align: center;
-        }
-
-        .month-navigation {
+        .month-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
-        .nav-button {
+        .nav-btn {
             background: none;
             border: none;
-            padding: 8px;
-            cursor: pointer;
             font-size: 24px;
-            color: #4a4a4a;
-            transition: all 0.2s ease;
-        }
-
-        .nav-button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .nav-button:active {
-            transform: scale(0.9);
+            cursor: pointer;
+            padding: 8px;
         }
 
         .month-title {
             font-size: 20px;
             font-weight: 600;
-            color: #1a1a1a;
-            margin: 0;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            margin-bottom: 32px;
+            gap: 4px;
+            margin-bottom: 20px;
         }
 
         .day-header {
             text-align: center;
-            font-size: 14px;
-            font-weight: 400;
-            color: #9ca3af;
-            padding: 12px 0;
+            font-weight: 500;
+            padding: 8px;
+            color: #666;
         }
 
         .calendar-day {
-            height: 48px;
+            height: 60px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
             cursor: pointer;
-            border-radius: 0;
-            font-size: 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
             font-weight: 500;
-            transition: all 0.15s ease;
-            position: relative;
-        }
-
-        .calendar-day:active {
-            transform: scale(0.95);
         }
 
         .calendar-day.available {
-            background-color: #fff;
-            color: #1a1a1a;
+            background: #f8f9fa;
+            color: #333;
         }
 
-        .calendar-day.unavailable {
-            background-color: #f3f4f6;
-            color: #9ca3af;
-            cursor: not-allowed;
+        .calendar-day.available:hover {
+            background: #e9ecef;
         }
 
         .calendar-day.selected {
-            background-color: #e8e9fe;
-            color: #1a1a1a;
+            background: #007bff;
+            color: white;
         }
 
-        .calendar-day.start {
-            background-color: #0a1029;
-            color: #fff;
-            border-radius: 8px 0 0 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            font-weight: 600;
+        .calendar-day.range {
+            background: #cce7ff;
+            color: #0056b3;
         }
 
-        .calendar-day.end {
-            background-color: #0a1029;
-            color: #fff;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            font-weight: 600;
-        }
-
-        .price-display {
-            font-size: 11px;
-            font-weight: 400;
-            margin-top: 2px;
-            opacity: 0.8;
-        }
-
-        .legend {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
-        }
-
-        .legend-text {
-            font-size: 13px;
-            color: #6b7280;
-        }
-
-        .guest-selector {
-            padding: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            background-color: #f9fafb;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .guest-label {
-            font-size: 16px;
-            color: #1a1a1a;
-            font-weight: 500;
-        }
-
-        .guest-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .guest-button {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 1px solid #e5e7eb;
-            background: #fff;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #6b7280;
-            transition: all 0.15s ease;
-        }
-
-        .guest-button:active {
-            transform: scale(0.9);
-        }
-
-        .price-summary {
-            padding: 16px;
-            background-color: #f9fafb;
-            border-radius: 12px;
-            margin-bottom: 24px;
-        }
-
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .price-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 12px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .clear-button {
-            width: 100%;
-            padding: 12px;
-            background-color: transparent;
-            color: #6b7280;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.15s ease;
-        }
-
-        .clear-button:active {
-            transform: scale(0.98);
-        }
-
-        .book-button {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            transition: all 0.15s ease;
-        }
-
-        .book-button:enabled {
-            background-color: #0a1029;
-            color: #fff;
-        }
-
-        .book-button:disabled {
-            background-color: #e5e7eb;
+        .calendar-day.unavailable {
+            background: #f3f4f6;
             color: #9ca3af;
             cursor: not-allowed;
         }
 
-        .book-button:active:enabled {
-            transform: scale(0.98);
+        .booking-form {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
         }
 
         .form-group {
@@ -347,135 +116,77 @@
 
         .form-label {
             display: block;
-            font-size: 16px;
+            margin-bottom: 4px;
             font-weight: 500;
-            margin-bottom: 8px;
-            color: #1a1a1a;
-        }
-
-        .required {
-            color: #ef4444;
         }
 
         .form-input {
             width: 100%;
-            padding: 12px 16px;
-            font-size: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            outline: none;
-            font-family: inherit;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
         }
 
-        .form-textarea {
-            width: 100%;
-            padding: 12px 16px;
-            font-size: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            outline: none;
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        .button-group {
+        .guest-controls {
             display: flex;
-            gap: 16px;
-            margin-top: 32px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        .back-button {
-            flex: 1;
-            padding: 16px;
-            background-color: #f9fafb;
-            color: #6b7280;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
+        .guest-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.15s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
         }
 
-        .back-button:active {
-            transform: scale(0.98);
-        }
-
-        .confirm-button {
-            flex: 1;
-            padding: 16px;
+        .book-btn {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: 600;
-            transition: all 0.15s ease;
+            font-weight: 500;
         }
 
-        .confirm-button:enabled {
-            background-color: #0a1029;
-            color: #fff;
-        }
-
-        .confirm-button:disabled {
-            background-color: #e5e7eb;
-            color: #9ca3af;
+        .book-btn:disabled {
+            background: #ccc;
             cursor: not-allowed;
         }
 
-        .confirm-button:active:enabled {
-            transform: scale(0.98);
+        .price-display {
+            font-size: 11px;
+            opacity: 0.8;
         }
 
-        .booking-summary {
+        .summary {
+            background: #f8f9fa;
             padding: 16px;
-            background-color: #f9fafb;
-            border-radius: 12px;
-            margin-bottom: 24px;
+            border-radius: 8px;
+            margin-bottom: 16px;
         }
 
-        .summary-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .summary-icon {
-            margin-right: 8px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Responsive design for mobile */
         @media (max-width: 768px) {
             .booking-container {
                 flex-direction: column;
                 max-width: 400px;
-                min-width: unset;
-                gap: 24px;
-                padding: 24px;
+                gap: 20px;
             }
-            
             .calendar-section {
                 min-width: unset;
             }
-            
             .booking-section {
                 flex: none;
-            }
-            
-            .calendar-day {
-                height: 48px;
-            }
-            
-            .calendar-grid {
-                gap: 2px;
             }
         }
     </style>
@@ -484,16 +195,14 @@
     <div class="booking-container">
         <!-- Calendar Section -->
         <div class="calendar-section">
-            <h2 class="title">Select your dates</h2>
-
-            <!-- Month navigation -->
-            <div class="month-navigation">
-                <button class="nav-button" id="prev-month">←</button>
-                <h3 class="month-title" id="month-title"></h3>
-                <button class="nav-button" id="next-month">→</button>
+            <h2>Select your dates</h2>
+            
+            <div class="month-nav">
+                <button class="nav-btn" onclick="changeMonth(-1)">←</button>
+                <div class="month-title" id="month-title">May 2025</div>
+                <button class="nav-btn" onclick="changeMonth(1)">→</button>
             </div>
 
-            <!-- Calendar grid -->
             <div class="calendar-grid" id="calendar-grid">
                 <div class="day-header">Su</div>
                 <div class="day-header">Mo</div>
@@ -503,669 +212,310 @@
                 <div class="day-header">Fr</div>
                 <div class="day-header">Sa</div>
             </div>
-
-            <!-- Legend -->
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #f3f4f6;"></div>
-                    <span class="legend-text">Unavailable</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #e8e9fe;"></div>
-                    <span class="legend-text">Selected range</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #fff; border: 1px solid #e5e7eb;"></div>
-                    <span class="legend-text">Available</span>
-                </div>
-            </div>
         </div>
 
         <!-- Booking Section -->
         <div class="booking-section">
-            <!-- Calendar Screen -->
-            <div id="calendar-screen">
-                <h3 style="font-size: 24px; font-weight: 600; color: #1a1a1a; margin-bottom: 24px; margin-top: 0;">Book your stay</h3>
-
-                <!-- Date selection UI -->
-                <div class="date-selector">
-                    <div class="date-inputs">
-                        <div class="date-input" id="checkin-input">
-                            <div class="date-label">Check-in</div>
-                            <div class="date-value" id="checkin-value">Select date</div>
-                        </div>
-                        <div class="date-input" id="checkout-input">
-                            <div class="date-label">Check-out</div>
-                            <div class="date-value" id="checkout-value">Select date</div>
-                        </div>
-                    </div>
-                    <div class="nights-display" id="nights-display"></div>
-                </div>
-
-                <!-- Guest selector -->
-                <div class="guest-selector">
-                    <span class="guest-label" id="guest-label">1 Guest</span>
-                    <div class="guest-controls">
-                        <button class="guest-button" id="guest-minus">−</button>
-                        <button class="guest-button" id="guest-plus">+</button>
-                    </div>
-                </div>
-
-                <!-- Price summary -->
-                <div class="price-summary hidden" id="price-summary">
-                    <div class="price-row">
-                        <span id="price-nights">0 nights</span>
-                        <span id="price-amount">$0</span>
-                    </div>
-                    <div class="price-total">
-                        <span style="font-size: 16px; font-weight: 600; color: #1a1a1a;">Total</span>
-                        <span style="font-size: 18px; font-weight: 600; color: #1a1a1a;" id="price-total">$0</span>
-                    </div>
-                </div>
-
-                <!-- Clear dates button -->
-                <button class="clear-button hidden" id="clear-dates">✕ Clear dates</button>
-
-                <!-- Book now button -->
-                <button class="book-button" id="book-now" disabled>Book now</button>
+            <h3>Book your stay</h3>
+            
+            <div class="summary" id="date-summary">
+                <div><strong>Check-in:</strong> <span id="checkin-display">Select date</span></div>
+                <div><strong>Check-out:</strong> <span id="checkout-display">Select date</span></div>
+                <div><strong>Nights:</strong> <span id="nights-display">0</span></div>
             </div>
 
-            <!-- Details Screen -->
-            <div id="details-screen" class="hidden">
-                <h3 style="font-size: 24px; font-weight: 600; color: #1a1a1a; margin-bottom: 24px; margin-top: 0;">Complete booking</h3>
-
-                <!-- Booking summary -->
-                <div class="booking-summary">
-                    <div class="summary-row">
-                        <svg class="summary-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <div style="font-size: 15px; color: #1a1a1a;" id="summary-dates"></div>
-                    </div>
-                    <div class="summary-row">
-                        <svg class="summary-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <div style="font-size: 15px; color: #1a1a1a;" id="summary-guests"></div>
-                    </div>
+            <div class="form-group">
+                <label class="form-label">Guests</label>
+                <div class="guest-controls">
+                    <button class="guest-btn" onclick="changeGuests(-1)">−</button>
+                    <span id="guest-count">1</span>
+                    <button class="guest-btn" onclick="changeGuests(1)">+</button>
                 </div>
-
-                <!-- Price breakdown -->
-                <div class="booking-summary">
-                    <h4 style="font-size: 18px; font-weight: 600; color: #1a1a1a; margin-top: 0; margin-bottom: 12px;">Price breakdown</h4>
-                    <div id="price-breakdown"></div>
-                    <div class="price-total" style="margin-top: 16px; padding-top: 16px;">
-                        <span style="color: #1a1a1a;" id="breakdown-total-label">Total (0 nights)</span>
-                        <span style="color: #1a1a1a; font-size: 16px;" id="breakdown-total-amount">$0</span>
-                    </div>
-                </div>
-
-                <!-- Form -->
-                <form id="booking-form" action="https://formspree.io/f/mzzrpoar" method="POST">
-                    <!-- Hidden fields for booking data -->
-                    <input type="hidden" name="checkin_date" id="form-checkin">
-                    <input type="hidden" name="checkout_date" id="form-checkout">
-                    <input type="hidden" name="nights" id="form-nights">
-                    <input type="hidden" name="guests" id="form-guests">
-                    <input type="hidden" name="total_price" id="form-total">
-                    <input type="hidden" name="_replyto" id="form-replyto">
-
-                    <div class="form-group">
-                        <label for="name" class="form-label">Name<span class="required">*</span></label>
-                        <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email<span class="required">*</span></label>
-                        <input type="email" id="email" name="email" class="form-input" placeholder="Your email address" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone<span class="required">*</span></label>
-                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="Your phone number" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="address" class="form-label">Address<span class="required">*</span></label>
-                        <textarea id="address" name="address" class="form-textarea" rows="3" placeholder="Your address" required></textarea>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="button" class="back-button" id="back-to-calendar">
-                            <span style="font-size: 20px;">←</span> Back
-                        </button>
-                        <button type="submit" class="confirm-button" id="confirm-booking" disabled>
-                            Confirm booking
-                        </button>
-                    </div>
-                </form>
             </div>
+
+            <div class="summary" id="price-summary" style="display: none;">
+                <div><strong>Total:</strong> $<span id="total-price">0</span></div>
+            </div>
+
+            <form id="booking-form" action="https://formspree.io/f/mzzrpoar" method="POST">
+                <input type="hidden" name="checkin_date" id="form-checkin">
+                <input type="hidden" name="checkout_date" id="form-checkout">
+                <input type="hidden" name="nights" id="form-nights">
+                <input type="hidden" name="guests" id="form-guests">
+                <input type="hidden" name="total_price" id="form-total">
+
+                <div class="form-group">
+                    <label class="form-label">Name *</label>
+                    <input type="text" name="name" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" name="email" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone *</label>
+                    <input type="tel" name="phone" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Address *</label>
+                    <textarea name="address" class="form-input" rows="3" required></textarea>
+                </div>
+
+                <button type="submit" class="book-btn" id="book-btn" disabled>Book Now</button>
+            </form>
         </div>
     </div>
 
     <script>
-        // Configuration
-        const CONFIG = {
-            showPricing: true,
-            prices: {
-                0: 185, // Sunday
-                1: 150, // Monday
-                2: 150, // Tuesday
-                3: 150, // Wednesday
-                4: 170, // Thursday
-                5: 210, // Friday
-                6: 220  // Saturday
-            },
-            maxGuests: 8,
-            unavailableDates: "2025-04-24-2025-04-26,2025-05-10-2025-05-15"
+        console.log('Simple booking system loading...');
+
+        // Simple state
+        let currentDate = new Date(2025, 4, 1); // May 2025
+        let startDate = null;
+        let endDate = null;
+        let guests = 1;
+        
+        // Price configuration
+        const prices = {
+            0: 185, // Sunday
+            1: 150, // Monday
+            2: 150, // Tuesday
+            3: 150, // Wednesday
+            4: 170, // Thursday
+            5: 210, // Friday
+            6: 220  // Saturday
         };
 
-        // State
-        let state = {
-            currentMonthIndex: 0,
-            startDate: null,
-            endDate: null,
-            guests: 1,
-            isSelecting: false,
-            hoverDate: null,
-            showDetailsScreen: false
-        };
-
-        // Utility functions
-        function getDatesInRange(start, end) {
-            const dates = [];
-            let current = new Date(start);
-            while (current <= end) {
-                dates.push(current.toISOString().split('T')[0]);
-                current = new Date(current.setDate(current.getDate() + 1));
-            }
-            return dates;
-        }
-
-        function formatCurrency(amount) {
-            if (amount >= 1000) {
-                const rounded = Math.round(amount / 100) / 10;
-                return `$${rounded.toFixed(1).replace('.0', '')}K`;
-            }
-            return `$${amount}`;
-        }
+        // Unavailable dates (example)
+        const unavailable = [
+            '2025-05-10', '2025-05-11', '2025-05-12',
+            '2025-05-25', '2025-05-26'
+        ];
 
         function formatDate(date) {
-            if (!date) return '';
-            const options = {
+            return date.toLocaleDateString('en-US', {
                 weekday: 'short',
                 month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-            };
-            return new Date(date).toLocaleDateString('en-US', options);
+                day: 'numeric'
+            });
         }
 
-        function generateMonthData(year, month) {
+        function getPrice(date) {
+            return prices[date.getDay()] || 150;
+        }
+
+        function isUnavailable(dateStr) {
+            return unavailable.includes(dateStr);
+        }
+
+        function generateCalendar() {
+            console.log('Generating calendar for:', currentDate.toLocaleDateString());
+            
+            const container = document.getElementById('calendar-grid');
+            
+            // Remove existing day elements (keep headers)
+            const existingDays = container.querySelectorAll('.calendar-day');
+            existingDays.forEach(day => day.remove());
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Update month title
+            document.getElementById('month-title').textContent = 
+                currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
+            const startingDayOfWeek = firstDay.getDay();
             const daysInMonth = lastDay.getDate();
-            const startingDay = firstDay.getDay();
 
-            const days = [];
-
-            // Add empty cells for days before the first day of the month
-            for (let i = 0; i < startingDay; i++) {
-                days.push({ date: null, day: null });
+            // Add empty cells for days before month starts
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                container.appendChild(emptyDay);
             }
 
-            // Add all days in the month
-            for (let i = 1; i <= daysInMonth; i++) {
-                const date = new Date(year, month, i);
-                days.push({
-                    date: date.toISOString().split('T')[0],
-                    day: i
-                });
-            }
-
-            return days;
-        }
-
-        function generateAllMonthsData() {
-            const months = [];
-            // Start from April 2025 (month index 3) to December 2027
-            for (let year = 2025; year <= 2027; year++) {
-                const startMonth = year === 2025 ? 3 : 0; // April is index 3
-                const endMonth = year === 2027 ? 11 : 11; // December is index 11
-
-                for (let month = startMonth; month <= endMonth; month++) {
-                    months.push({
-                        year,
-                        month,
-                        name: new Date(year, month).toLocaleDateString('en-US', {
-                            month: 'long',
-                            year: 'numeric'
-                        }),
-                        days: generateMonthData(year, month)
-                    });
-                }
-            }
-            return months;
-        }
-
-        function parseUnavailableDates(datesString) {
-            if (!datesString) return [];
-            try {
-                return datesString.split(',').map(range => {
-                    const [start, end] = range.trim().split('-');
-                    return { start, end };
-                });
-            } catch (e) {
-                return [];
-            }
-        }
-
-        function getPriceForDate(date) {
-            if (!date) return 0;
-            const dayOfWeek = new Date(date).getDay();
-            return CONFIG.prices[dayOfWeek] || 200;
-        }
-
-        // Initialize
-        const allMonths = generateAllMonthsData();
-        const unavailableDateRanges = parseUnavailableDates(CONFIG.unavailableDates);
-
-        // Create availability object from date ranges
-        const availability = {};
-        unavailableDateRanges.forEach(range => {
-            const dates = getDatesInRange(new Date(range.start), new Date(range.end));
-            dates.forEach(date => {
-                availability[date] = 'unavailable';
-            });
-        });
-
-        function getDateStatus(date) {
-            if (!date) return 'empty';
-            return availability[date] || 'available';
-        }
-
-        function isDateSelected(date) {
-            const selectedRange = getSelectedRange();
-            return selectedRange.includes(date);
-        }
-
-        function getSelectedRange() {
-            if (state.startDate && state.endDate) {
-                return getDatesInRange(state.startDate, state.endDate);
-            }
-            if (state.startDate && state.isSelecting && state.hoverDate) {
-                const hoveredDate = new Date(state.hoverDate);
-                if (hoveredDate >= state.startDate) {
-                    return getDatesInRange(state.startDate, hoveredDate);
-                }
-            }
-            return [];
-        }
-
-        function isDateStart(date) {
-            return state.startDate && date === state.startDate.toISOString().split('T')[0];
-        }
-
-        function isDateEnd(date) {
-            return state.endDate && date === state.endDate.toISOString().split('T')[0];
-        }
-
-        function getTotalPrice() {
-            if (!state.startDate || !state.endDate) return 0;
-            const nights = getDatesInRange(
-                state.startDate,
-                new Date(state.endDate.getTime() - 86400000) // Exclude checkout day
-            );
-            return nights.reduce((total, date) => total + getPriceForDate(date), 0);
-        }
-
-        function getNightsCount() {
-            if (!state.startDate || !state.endDate) return 0;
-            return Math.round((state.endDate - state.startDate) / (1000 * 60 * 60 * 24));
-        }
-
-        function getPriceBreakdown() {
-            if (!state.startDate || !state.endDate) return [];
-
-            const nights = getDatesInRange(
-                state.startDate,
-                new Date(state.endDate.getTime() - 86400000)
-            );
-            return nights.map(date => ({
-                date,
-                formattedDate: formatDate(date),
-                price: getPriceForDate(date)
-            }));
-        }
-
-        function renderCalendar() {
-            const currentMonth = allMonths[state.currentMonthIndex];
-            const monthTitle = document.getElementById('month-title');
-            const prevButton = document.getElementById('prev-month');
-            const nextButton = document.getElementById('next-month');
-            const calendarGrid = document.getElementById('calendar-grid');
-
-            // Update month title and navigation
-            monthTitle.textContent = currentMonth.name;
-            prevButton.disabled = state.currentMonthIndex === 0;
-            nextButton.disabled = state.currentMonthIndex === allMonths.length - 1;
-
-            // Clear existing day elements (keep headers)
-            const dayElements = calendarGrid.querySelectorAll('.calendar-day');
-            dayElements.forEach(el => el.remove());
-
-            // Render days
-            currentMonth.days.forEach(dayInfo => {
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dateStr = date.toISOString().split('T')[0];
                 const dayElement = document.createElement('div');
+                
                 dayElement.className = 'calendar-day';
+                dayElement.innerHTML = `
+                    ${day}
+                    <div class="price-display">${getPrice(date)}</div>
+                `;
 
-                if (!dayInfo.date) {
-                    const isMobile = window.innerWidth <= 768;
-                    dayElement.style.minHeight = isMobile ? '48px' : '60px';
-                    calendarGrid.appendChild(dayElement);
-                    return;
-                }
-
-                const dateStr = dayInfo.date;
-                const status = getDateStatus(dateStr);
-                const isSelected = isDateSelected(dateStr);
-                const isStart = isDateStart(dateStr);
-                const isEnd = isDateEnd(dateStr);
-                const isPast = new Date(dateStr) < new Date().setHours(0, 0, 0, 0);
-                const dayPrice = getPriceForDate(dateStr);
-
-                // Apply classes and styles
-                if (isSelected) {
-                    if (isStart) {
-                        dayElement.classList.add('start');
-                    } else if (isEnd) {
-                        dayElement.classList.add('end');
-                    } else {
-                        dayElement.classList.add('selected');
-                    }
-                } else if (status === 'unavailable' || isPast) {
+                // Determine availability and styling
+                const isPast = date < new Date().setHours(0, 0, 0, 0);
+                const isUnavail = isUnavailable(dateStr);
+                
+                if (isPast || isUnavail) {
                     dayElement.classList.add('unavailable');
                 } else {
                     dayElement.classList.add('available');
-                }
-
-                // Set content
-                dayElement.innerHTML = `
-                    ${dayInfo.day}
-                    ${CONFIG.showPricing && status !== 'unavailable' && !isPast ? 
-                        `<div class="price-display">${formatCurrency(dayPrice)}</div>` : ''}
-                `;
-
-                // Add click handler
-                if (status !== 'unavailable' && !isPast) {
                     dayElement.onclick = function() {
-                        handleDateClick(dateStr);
-                    };
-                    dayElement.onmouseenter = function() {
-                        if (!state.isSelecting) state.hoverDate = dateStr;
-                        renderCalendar(); // Re-render to show hover effect
-                    };
-                    dayElement.onmouseleave = function() {
-                        state.hoverDate = null;
-                        renderCalendar(); // Re-render to remove hover effect
+                        selectDate(date);
                     };
                 }
 
-                calendarGrid.appendChild(dayElement);
-            });
+                // Check if selected
+                if (startDate && date.getTime() === startDate.getTime()) {
+                    dayElement.classList.add('selected');
+                }
+                if (endDate && date.getTime() === endDate.getTime()) {
+                    dayElement.classList.add('selected');
+                }
+
+                // Check if in range
+                if (startDate && endDate && date > startDate && date < endDate) {
+                    dayElement.classList.add('range');
+                }
+
+                container.appendChild(dayElement);
+            }
         }
 
-        function handleDateClick(date) {
-            if (!date) return;
-
-            const selectedDate = new Date(date);
-
-            // If no dates are selected or both dates are already selected, start a new selection
-            if (!state.startDate || (state.startDate && state.endDate)) {
-                state.startDate = selectedDate;
-                state.endDate = null;
-                state.isSelecting = false;
-            }
-            // If only start date is selected, set the end date
-            else if (state.startDate && !state.endDate) {
-                // Only allow end dates after start date
-                if (selectedDate > state.startDate) {
-                    state.endDate = selectedDate;
-                } else if (selectedDate < state.startDate) {
-                    // If user selects a date before start date, make it the new start date
-                    state.startDate = selectedDate;
-                    state.endDate = null;
+        function selectDate(date) {
+            console.log('Date selected:', date.toLocaleDateString());
+            
+            if (!startDate || (startDate && endDate)) {
+                // Start new selection
+                startDate = date;
+                endDate = null;
+            } else if (startDate && !endDate) {
+                // Set end date
+                if (date > startDate) {
+                    endDate = date;
+                } else {
+                    startDate = date;
+                    endDate = null;
                 }
             }
 
-            updateUI();
+            updateDisplay();
+            generateCalendar(); // Re-render calendar
         }
 
-        function updateUI() {
-            // Update date inputs
-            const checkinValue = document.getElementById('checkin-value');
-            const checkoutValue = document.getElementById('checkout-value');
-            const nightsDisplay = document.getElementById('nights-display');
+        function updateDisplay() {
+            // Update date display
+            document.getElementById('checkin-display').textContent = 
+                startDate ? formatDate(startDate) : 'Select date';
+            document.getElementById('checkout-display').textContent = 
+                endDate ? formatDate(endDate) : 'Select date';
 
-            checkinValue.textContent = state.startDate ? formatDate(state.startDate) : 'Select date';
-            checkoutValue.textContent = state.endDate ? formatDate(state.endDate) : 'Select date';
+            // Calculate nights and price
+            let nights = 0;
+            let totalPrice = 0;
 
-            const nightsCount = getNightsCount();
-            if (nightsCount > 0) {
-                nightsDisplay.textContent = `${nightsCount} night${nightsCount !== 1 ? 's' : ''}`;
-                nightsDisplay.style.display = 'block';
-            } else {
-                nightsDisplay.style.display = 'none';
+            if (startDate && endDate) {
+                nights = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+                
+                // Calculate total price
+                let currentDate = new Date(startDate);
+                while (currentDate < endDate) {
+                    totalPrice += getPrice(currentDate);
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
             }
 
-            // Update guest selector
-            document.getElementById('guest-label').textContent = `${state.guests} Guest${state.guests !== 1 ? 's' : ''}`;
+            document.getElementById('nights-display').textContent = nights;
+            document.getElementById('total-price').textContent = totalPrice;
 
-            // Update price summary
-            const totalPrice = getTotalPrice();
-            const priceSummary = document.getElementById('price-summary');
-            const clearButton = document.getElementById('clear-dates');
-            const bookButton = document.getElementById('book-now');
-
+            // Show/hide price summary
+            const priceDiv = document.getElementById('price-summary');
             if (totalPrice > 0) {
-                priceSummary.classList.remove('hidden');
-                document.getElementById('price-nights').textContent = `${nightsCount} night${nightsCount !== 1 ? 's' : ''}`;
-                document.getElementById('price-amount').textContent = formatCurrency(totalPrice);
-                document.getElementById('price-total').textContent = formatCurrency(totalPrice);
+                priceDiv.style.display = 'block';
             } else {
-                priceSummary.classList.add('hidden');
-            }
-
-            // Show/hide clear button
-            if (state.startDate || state.endDate) {
-                clearButton.classList.remove('hidden');
-            } else {
-                clearButton.classList.add('hidden');
+                priceDiv.style.display = 'none';
             }
 
             // Enable/disable book button
-            bookButton.disabled = !state.startDate || !state.endDate;
-
-            // Re-render calendar
-            renderCalendar();
-        }
-
-        function showDetailsScreen() {
-            document.getElementById('calendar-screen').classList.add('hidden');
-            document.getElementById('details-screen').classList.remove('hidden');
-
-            // Update summary
-            document.getElementById('summary-dates').textContent = 
-                `${formatDate(state.startDate)} → ${formatDate(state.endDate)}`;
-            document.getElementById('summary-guests').textContent = 
-                `${state.guests} Guest${state.guests !== 1 ? 's' : ''}`;
-
-            // Update price breakdown
-            const breakdown = getPriceBreakdown();
-            const breakdownContainer = document.getElementById('price-breakdown');
-            breakdownContainer.innerHTML = '';
-
-            breakdown.forEach(item => {
-                const row = document.createElement('div');
-                row.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px;';
-                row.innerHTML = `
-                    <span style="color: #6b7280;">${item.formattedDate}</span>
-                    <span style="color: #1a1a1a;">$${item.price}</span>
-                `;
-                breakdownContainer.appendChild(row);
-            });
-
-            const totalPrice = getTotalPrice();
-            const nightsCount = getNightsCount();
-            document.getElementById('breakdown-total-label').textContent = 
-                `Total (${nightsCount} night${nightsCount !== 1 ? 's' : ''})`;
-            document.getElementById('breakdown-total-amount').textContent = `$${totalPrice}`;
+            const bookBtn = document.getElementById('book-btn');
+            bookBtn.disabled = !startDate || !endDate;
 
             // Update hidden form fields
-            document.getElementById('form-checkin').value = formatDate(state.startDate);
-            document.getElementById('form-checkout').value = formatDate(state.endDate);
-            document.getElementById('form-nights').value = nightsCount;
-            document.getElementById('form-guests').value = state.guests;
-            document.getElementById('form-total').value = `$${totalPrice}`;
+            document.getElementById('form-checkin').value = startDate ? startDate.toISOString().split('T')[0] : '';
+            document.getElementById('form-checkout').value = endDate ? endDate.toISOString().split('T')[0] : '';
+            document.getElementById('form-nights').value = nights;
+            document.getElementById('form-guests').value = guests;
+            document.getElementById('form-total').value = '$' + totalPrice;
         }
 
-        function showCalendarScreen() {
-            document.getElementById('details-screen').classList.add('hidden');
-            document.getElementById('calendar-screen').classList.remove('hidden');
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            generateCalendar();
         }
 
-        // Event listeners
-        document.getElementById('prev-month').onclick = function() {
-            if (state.currentMonthIndex > 0) {
-                state.currentMonthIndex--;
-                renderCalendar();
-            }
-        };
+        function changeGuests(change) {
+            guests = Math.max(1, Math.min(8, guests + change));
+            document.getElementById('guest-count').textContent = guests;
+            updateDisplay();
+        }
 
-        document.getElementById('next-month').onclick = function() {
-            if (state.currentMonthIndex < allMonths.length - 1) {
-                state.currentMonthIndex++;
-                renderCalendar();
-            }
-        };
-
-        document.getElementById('guest-minus').onclick = function() {
-            if (state.guests > 1) {
-                state.guests--;
-                updateUI();
-            }
-        };
-
-        document.getElementById('guest-plus').onclick = function() {
-            if (state.guests < CONFIG.maxGuests) {
-                state.guests++;
-                updateUI();
-            }
-        };
-
-        document.getElementById('clear-dates').onclick = function() {
-            state.startDate = null;
-            state.endDate = null;
-            state.hoverDate = null;
-            state.isSelecting = false;
-            updateUI();
-        };
-
-        document.getElementById('book-now').onclick = function() {
-            if (state.startDate && state.endDate) {
-                showDetailsScreen();
-            }
-        };
-
-        document.getElementById('back-to-calendar').onclick = function() {
-            showCalendarScreen();
-        };
-
-        // Form validation
-        const formInputs = ['name', 'email', 'phone', 'address'];
-        formInputs.forEach(inputId => {
-            const input = document.getElementById(inputId);
-            input.oninput = function() {
-                const confirmButton = document.getElementById('confirm-booking');
-                const allFilled = formInputs.every(id => document.getElementById(id).value.trim());
-                confirmButton.disabled = !allFilled;
-                
-                // Update reply-to field
-                if (inputId === 'email') {
-                    document.getElementById('form-replyto').value = input.value;
-                }
-            };
-        });
-
-        // Handle form submission
+        // Form submission with database integration
         document.getElementById('booking-form').onsubmit = async function(e) {
-            e.preventDefault(); // Stop normal form submission
+            e.preventDefault();
             
-            const confirmButton = document.getElementById('confirm-booking');
-            const originalText = confirmButton.textContent;
+            const bookBtn = document.getElementById('book-btn');
+            const originalText = bookBtn.textContent;
             
-            // Show loading state
-            confirmButton.disabled = true;
-            confirmButton.textContent = 'Saving booking...';
+            bookBtn.disabled = true;
+            bookBtn.textContent = 'Saving...';
             
             try {
-                // Prepare booking data
+                // Get form data
+                const formData = new FormData(this);
                 const bookingData = {
-                    checkin_date: document.getElementById('form-checkin').value,
-                    checkout_date: document.getElementById('form-checkout').value,
-                    nights: parseInt(document.getElementById('form-nights').value),
-                    guests: parseInt(document.getElementById('form-guests').value),
-                    total_price: document.getElementById('form-total').value,
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    address: document.getElementById('address').value
+                    checkin_date: formData.get('checkin_date'),
+                    checkout_date: formData.get('checkout_date'),
+                    nights: parseInt(formData.get('nights')),
+                    guests: parseInt(formData.get('guests')),
+                    total_price: formData.get('total_price'),
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address')
                 };
 
-                // Save to database
+                // Try to save to database
                 const response = await fetch('/api/bookings', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(bookingData)
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    // Success! Show confirmation
-                    alert('🎉 Booking confirmed! Confirmation ID: ' + result.bookingId);
-                    
-                    // Also send to Formspree as backup/notification
+                    alert('🎉 Booking confirmed! ID: ' + result.bookingId);
+                    // Also submit to Formspree
                     this.submit();
                 } else {
-                    throw new Error(result.error || 'Failed to save booking');
+                    throw new Error(result.error);
                 }
 
             } catch (error) {
                 console.error('Booking error:', error);
-                alert('❌ Booking failed: ' + error.message + '\n\nTrying backup method...');
-                
-                // Fallback to Formspree if database fails
+                alert('⚠️ Using backup booking method...');
+                // Fallback to Formspree
                 this.submit();
             }
             
-            // Reset button
-            confirmButton.disabled = false;
-            confirmButton.textContent = originalText;
+            bookBtn.disabled = false;
+            bookBtn.textContent = originalText;
         };
 
-        // Initialize the app
-        console.log('Booking system initializing...');
-        updateUI();
-        console.log('Booking system ready!');
-
-        // Handle window resize
-        window.onresize = function() {
-            renderCalendar(); // Re-render calendar on resize
-        };
+        // Initialize
+        console.log('Initializing calendar...');
+        generateCalendar();
+        updateDisplay();
+        console.log('Simple booking system ready!');
     </script>
 </body>
 </html>
