@@ -12,7 +12,7 @@
         body {
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: transparent;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,11 +22,24 @@
 
         .booking-container {
             width: 100%;
-            max-width: 360px;
-            padding: 24px;
+            max-width: 1000px;
+            padding: 32px;
             background-color: #fff;
             border-radius: 24px;
             box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16);
+            display: flex;
+            gap: 40px;
+        }
+
+        .calendar-section {
+            flex: 1;
+            min-width: 400px;
+        }
+
+        .booking-section {
+            flex: 0 0 360px;
+            display: flex;
+            flex-direction: column;
         }
 
         .title {
@@ -438,28 +451,40 @@
         .hidden {
             display: none;
         }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .booking-container {
+                flex-direction: column;
+                max-width: 400px;
+                min-width: unset;
+                gap: 24px;
+                padding: 24px;
+            }
+            
+            .calendar-section {
+                min-width: unset;
+            }
+            
+            .booking-section {
+                flex: none;
+            }
+            
+            .calendar-day {
+                height: 48px;
+            }
+            
+            .calendar-grid {
+                gap: 2px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="booking-container">
-        <!-- Calendar Screen -->
-        <div id="calendar-screen">
-            <h2 class="title">Book your stay</h2>
-
-            <!-- Date selection UI -->
-            <div class="date-selector">
-                <div class="date-inputs">
-                    <div class="date-input" id="checkin-input">
-                        <div class="date-label">Check-in</div>
-                        <div class="date-value" id="checkin-value">Select date</div>
-                    </div>
-                    <div class="date-input" id="checkout-input">
-                        <div class="date-label">Check-out</div>
-                        <div class="date-value" id="checkout-value">Select date</div>
-                    </div>
-                </div>
-                <div class="nights-display" id="nights-display"></div>
-            </div>
+        <!-- Calendar Section -->
+        <div class="calendar-section">
+            <h2 class="title">Select your dates</h2>
 
             <!-- Month navigation -->
             <div class="month-navigation">
@@ -494,105 +519,128 @@
                     <span class="legend-text">Available</span>
                 </div>
             </div>
-
-            <!-- Guest selector -->
-            <div class="guest-selector">
-                <span class="guest-label" id="guest-label">1 Guest</span>
-                <div class="guest-controls">
-                    <button class="guest-button" id="guest-minus">−</button>
-                    <button class="guest-button" id="guest-plus">+</button>
-                </div>
-            </div>
-
-            <!-- Price summary -->
-            <div class="price-summary hidden" id="price-summary">
-                <div class="price-row">
-                    <span id="price-nights">0 nights</span>
-                    <span id="price-amount">$0</span>
-                </div>
-                <div class="price-total">
-                    <span style="font-size: 16px; font-weight: 600; color: #1a1a1a;">Total</span>
-                    <span style="font-size: 18px; font-weight: 600; color: #1a1a1a;" id="price-total">$0</span>
-                </div>
-            </div>
-
-            <!-- Clear dates button -->
-            <button class="clear-button hidden" id="clear-dates">✕ Clear dates</button>
-
-            <!-- Book now button -->
-            <button class="book-button" id="book-now" disabled>Book now</button>
         </div>
 
-        <!-- Details Screen -->
-        <div id="details-screen" class="hidden">
-            <h2 class="title">Complete your booking</h2>
+        <!-- Booking Section -->
+        <div class="booking-section">
+            <!-- Calendar Screen -->
+            <div id="calendar-screen">
+                <h3 style="font-size: 24px; font-weight: 600; color: #1a1a1a; margin-bottom: 24px; margin-top: 0;">Book your stay</h3>
 
-            <!-- Booking summary -->
-            <div class="booking-summary">
-                <div class="summary-row">
-                    <svg class="summary-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <div style="font-size: 15px; color: #1a1a1a;" id="summary-dates"></div>
+                <!-- Date selection UI -->
+                <div class="date-selector">
+                    <div class="date-inputs">
+                        <div class="date-input" id="checkin-input">
+                            <div class="date-label">Check-in</div>
+                            <div class="date-value" id="checkin-value">Select date</div>
+                        </div>
+                        <div class="date-input" id="checkout-input">
+                            <div class="date-label">Check-out</div>
+                            <div class="date-value" id="checkout-value">Select date</div>
+                        </div>
+                    </div>
+                    <div class="nights-display" id="nights-display"></div>
                 </div>
-                <div class="summary-row">
-                    <svg class="summary-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <div style="font-size: 15px; color: #1a1a1a;" id="summary-guests"></div>
+
+                <!-- Guest selector -->
+                <div class="guest-selector">
+                    <span class="guest-label" id="guest-label">1 Guest</span>
+                    <div class="guest-controls">
+                        <button class="guest-button" id="guest-minus">−</button>
+                        <button class="guest-button" id="guest-plus">+</button>
+                    </div>
                 </div>
+
+                <!-- Price summary -->
+                <div class="price-summary hidden" id="price-summary">
+                    <div class="price-row">
+                        <span id="price-nights">0 nights</span>
+                        <span id="price-amount">$0</span>
+                    </div>
+                    <div class="price-total">
+                        <span style="font-size: 16px; font-weight: 600; color: #1a1a1a;">Total</span>
+                        <span style="font-size: 18px; font-weight: 600; color: #1a1a1a;" id="price-total">$0</span>
+                    </div>
+                </div>
+
+                <!-- Clear dates button -->
+                <button class="clear-button hidden" id="clear-dates">✕ Clear dates</button>
+
+                <!-- Book now button -->
+                <button class="book-button" id="book-now" disabled>Book now</button>
             </div>
 
-            <!-- Price breakdown -->
-            <div class="booking-summary">
-                <h3 style="font-size: 18px; font-weight: 600; color: #1a1a1a; margin-top: 0; margin-bottom: 12px;">Price breakdown</h3>
-                <div id="price-breakdown"></div>
-                <div class="price-total" style="margin-top: 16px; padding-top: 16px;">
-                    <span style="color: #1a1a1a;" id="breakdown-total-label">Total (0 nights)</span>
-                    <span style="color: #1a1a1a; font-size: 16px;" id="breakdown-total-amount">$0</span>
+            <!-- Details Screen -->
+            <div id="details-screen" class="hidden">
+                <h3 style="font-size: 24px; font-weight: 600; color: #1a1a1a; margin-bottom: 24px; margin-top: 0;">Complete booking</h3>
+
+                <!-- Booking summary -->
+                <div class="booking-summary">
+                    <div class="summary-row">
+                        <svg class="summary-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div style="font-size: 15px; color: #1a1a1a;" id="summary-dates"></div>
+                    </div>
+                    <div class="summary-row">
+                        <svg class="summary-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div style="font-size: 15px; color: #1a1a1a;" id="summary-guests"></div>
+                    </div>
                 </div>
+
+                <!-- Price breakdown -->
+                <div class="booking-summary">
+                    <h4 style="font-size: 18px; font-weight: 600; color: #1a1a1a; margin-top: 0; margin-bottom: 12px;">Price breakdown</h4>
+                    <div id="price-breakdown"></div>
+                    <div class="price-total" style="margin-top: 16px; padding-top: 16px;">
+                        <span style="color: #1a1a1a;" id="breakdown-total-label">Total (0 nights)</span>
+                        <span style="color: #1a1a1a; font-size: 16px;" id="breakdown-total-amount">$0</span>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form id="booking-form" action="https://formspree.io/f/mzzrpoar" method="POST">
+                    <!-- Hidden fields for booking data -->
+                    <input type="hidden" name="checkin_date" id="form-checkin">
+                    <input type="hidden" name="checkout_date" id="form-checkout">
+                    <input type="hidden" name="nights" id="form-nights">
+                    <input type="hidden" name="guests" id="form-guests">
+                    <input type="hidden" name="total_price" id="form-total">
+                    <input type="hidden" name="_replyto" id="form-replyto">
+
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name<span class="required">*</span></label>
+                        <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email<span class="required">*</span></label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="Your email address" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone<span class="required">*</span></label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="Your phone number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address" class="form-label">Address<span class="required">*</span></label>
+                        <textarea id="address" name="address" class="form-textarea" rows="3" placeholder="Your address" required></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="back-button" id="back-to-calendar">
+                            <span style="font-size: 20px;">←</span> Back
+                        </button>
+                        <button type="submit" class="confirm-button" id="confirm-booking" disabled>
+                            Confirm booking
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <!-- Form -->
-            <form id="booking-form" action="https://formspree.io/f/mzzrpoar" method="POST">
-                <!-- Hidden fields for booking data -->
-                <input type="hidden" name="checkin_date" id="form-checkin">
-                <input type="hidden" name="checkout_date" id="form-checkout">
-                <input type="hidden" name="nights" id="form-nights">
-                <input type="hidden" name="guests" id="form-guests">
-                <input type="hidden" name="total_price" id="form-total">
-                <input type="hidden" name="_replyto" id="form-replyto">
-
-                <div class="form-group">
-                    <label for="name" class="form-label">Name<span class="required">*</span></label>
-                    <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="email" class="form-label">Email<span class="required">*</span></label>
-                    <input type="email" id="email" name="email" class="form-input" placeholder="Your email address" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone" class="form-label">Phone<span class="required">*</span></label>
-                    <input type="tel" id="phone" name="phone" class="form-input" placeholder="Your phone number" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="address" class="form-label">Address<span class="required">*</span></label>
-                    <textarea id="address" name="address" class="form-textarea" rows="3" placeholder="Your address" required></textarea>
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="back-button" id="back-to-calendar">
-                        <span style="font-size: 20px;">←</span> Back
-                    </button>
-                    <button type="submit" class="confirm-button" id="confirm-booking" disabled>
-                        Confirm booking
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -813,7 +861,8 @@
                 dayElement.className = 'calendar-day';
 
                 if (!dayInfo.date) {
-                    dayElement.style.minHeight = '48px';
+                    const isMobile = window.innerWidth <= 768;
+                    dayElement.style.minHeight = isMobile ? '48px' : '60px';
                     calendarGrid.appendChild(dayElement);
                     return;
                 }
@@ -1049,6 +1098,11 @@
 
         // Initialize the app
         updateUI();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            renderCalendar(); // Re-render calendar on resize
+        });
     </script>
 </body>
 </html>
