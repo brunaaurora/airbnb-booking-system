@@ -469,7 +469,7 @@
             </div>
 
             <!-- Calendar grid -->
-            <div class="calendar-grid">
+            <div class="calendar-grid" id="calendar-grid">
                 <div class="day-header">Su</div>
                 <div class="day-header">Mo</div>
                 <div class="day-header">Tu</div>
@@ -477,7 +477,6 @@
                 <div class="day-header">Th</div>
                 <div class="day-header">Fr</div>
                 <div class="day-header">Sa</div>
-                <div id="calendar-days"></div>
             </div>
 
             <!-- Legend -->
@@ -797,15 +796,16 @@
             const monthTitle = document.getElementById('month-title');
             const prevButton = document.getElementById('prev-month');
             const nextButton = document.getElementById('next-month');
-            const calendarDays = document.getElementById('calendar-days');
+            const calendarGrid = document.getElementById('calendar-grid');
 
             // Update month title and navigation
             monthTitle.textContent = currentMonth.name;
             prevButton.disabled = state.currentMonthIndex === 0;
             nextButton.disabled = state.currentMonthIndex === allMonths.length - 1;
 
-            // Clear calendar days
-            calendarDays.innerHTML = '';
+            // Clear existing day elements (keep headers)
+            const dayElements = calendarGrid.querySelectorAll('.calendar-day');
+            dayElements.forEach(el => el.remove());
 
             // Render days
             currentMonth.days.forEach(dayInfo => {
@@ -814,7 +814,7 @@
 
                 if (!dayInfo.date) {
                     dayElement.style.minHeight = '48px';
-                    calendarDays.appendChild(dayElement);
+                    calendarGrid.appendChild(dayElement);
                     return;
                 }
 
@@ -861,7 +861,7 @@
                     });
                 }
 
-                calendarDays.appendChild(dayElement);
+                calendarGrid.appendChild(dayElement);
             });
         }
 
