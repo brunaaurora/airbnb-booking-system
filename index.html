@@ -1096,6 +1096,65 @@
             });
         });
 
+        // Handle form submission
+        document.getElementById('booking-form').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Stop normal form submission
+            
+            const confirmButton = document.getElementById('confirm-booking');
+            const originalText = confirmButton.textContent;
+            
+            // Show loading state
+            confirmButton.disabled = true;
+            confirmButton.textContent = 'Saving booking...';
+            
+            try {
+                // Prepare booking data
+                const bookingData = {
+                    checkin_date: document.getElementById('form-checkin').value,
+                    checkout_date: document.getElementById('form-checkout').value,
+                    nights: parseInt(document.getElementById('form-nights').value),
+                    guests: parseInt(document.getElementById('form-guests').value),
+                    total_price: document.getElementById('form-total').value,
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value
+                };
+
+                // Save to database
+                const response = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Success! Show confirmation
+                    alert('🎉 Booking confirmed! Confirmation ID: ' + result.bookingId);
+                    
+                    // Also send to Formspree as backup/notification
+                    this.submit();
+                } else {
+                    throw new Error(result.error || 'Failed to save booking');
+                }
+
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert('❌ Booking failed: ' + error.message + '\n\nTrying backup method...');
+                
+                // Fallback to Formspree if database fails
+                this.submit();
+            }
+            
+            // Reset button
+            confirmButton.disabled = false;
+            confirmButton.textContent = originalText;
+        });
+
         // Initialize the app
         updateUI();
 
