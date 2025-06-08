@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking System</title>
+    <title>Property Booking System</title>
     <style>
         body {
             margin: 0;
@@ -31,6 +31,43 @@
 
         .booking-section {
             flex: 0 0 360px;
+        }
+
+        .property-selector {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .property-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .property-card:hover {
+            border-color: #007bff;
+        }
+
+        .property-card.selected {
+            border-color: #007bff;
+            background-color: #f0f7ff;
+        }
+
+        .property-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .property-details {
+            font-size: 14px;
+            color: #666;
         }
 
         .month-nav {
@@ -176,6 +213,20 @@
             margin-bottom: 16px;
         }
 
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
         @media (max-width: 768px) {
             .booking-container {
                 flex-direction: column;
@@ -216,84 +267,185 @@
 
         <!-- Booking Section -->
         <div class="booking-section">
-            <h3>Book your stay</h3>
+            <div id="loading" class="loading">Loading properties...</div>
             
-            <div class="summary" id="date-summary">
-                <div><strong>Check-in:</strong> <span id="checkin-display">Select date</span></div>
-                <div><strong>Check-out:</strong> <span id="checkout-display">Select date</span></div>
-                <div><strong>Nights:</strong> <span id="nights-display">0</span></div>
+            <div id="main-content" style="display: none;">
+                <h3>Book your stay</h3>
+                
+                <!-- Property Selection -->
+                <div class="property-selector">
+                    <h4 style="margin-top: 0;">Choose Property</h4>
+                    <div id="property-list"></div>
+                </div>
+
+                <div class="summary" id="date-summary">
+                    <div><strong>Check-in:</strong> <span id="checkin-display">Select date</span></div>
+                    <div><strong>Check-out:</strong> <span id="checkout-display">Select date</span></div>
+                    <div><strong>Nights:</strong> <span id="nights-display">0</span></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Guests</label>
+                    <div class="guest-controls">
+                        <button class="guest-btn" onclick="changeGuests(-1)">−</button>
+                        <span id="guest-count">1</span>
+                        <button class="guest-btn" onclick="changeGuests(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="summary" id="price-summary" style="display: none;">
+                    <div><strong>Total:</strong> $<span id="total-price">0</span></div>
+                </div>
+
+                <form id="booking-form" action="https://formspree.io/f/mzzrpoar" method="POST">
+                    <input type="hidden" name="checkin_date" id="form-checkin">
+                    <input type="hidden" name="checkout_date" id="form-checkout">
+                    <input type="hidden" name="nights" id="form-nights">
+                    <input type="hidden" name="guests" id="form-guests">
+                    <input type="hidden" name="total_price" id="form-total">
+                    <input type="hidden" name="property_id" id="form-property-id">
+                    <input type="hidden" name="property_name" id="form-property-name">
+
+                    <div class="form-group">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" name="email" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone *</label>
+                        <input type="tel" name="phone" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Address *</label>
+                        <textarea name="address" class="form-input" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="book-btn" id="book-btn" disabled>Book Now</button>
+                </form>
             </div>
-
-            <div class="form-group">
-                <label class="form-label">Guests</label>
-                <div class="guest-controls">
-                    <button class="guest-btn" onclick="changeGuests(-1)">−</button>
-                    <span id="guest-count">1</span>
-                    <button class="guest-btn" onclick="changeGuests(1)">+</button>
-                </div>
-            </div>
-
-            <div class="summary" id="price-summary" style="display: none;">
-                <div><strong>Total:</strong> $<span id="total-price">0</span></div>
-            </div>
-
-            <form id="booking-form" action="https://formspree.io/f/mzzrpoar" method="POST">
-                <input type="hidden" name="checkin_date" id="form-checkin">
-                <input type="hidden" name="checkout_date" id="form-checkout">
-                <input type="hidden" name="nights" id="form-nights">
-                <input type="hidden" name="guests" id="form-guests">
-                <input type="hidden" name="total_price" id="form-total">
-
-                <div class="form-group">
-                    <label class="form-label">Name *</label>
-                    <input type="text" name="name" class="form-input" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Email *</label>
-                    <input type="email" name="email" class="form-input" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Phone *</label>
-                    <input type="tel" name="phone" class="form-input" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Address *</label>
-                    <textarea name="address" class="form-input" rows="3" required></textarea>
-                </div>
-
-                <button type="submit" class="book-btn" id="book-btn" disabled>Book Now</button>
-            </form>
         </div>
     </div>
 
     <script>
-        console.log('Simple booking system loading...');
+        console.log('Dynamic booking system loading...');
 
-        // Simple state
+        // State
         let currentDate = new Date(2025, 4, 1); // May 2025
         let startDate = null;
         let endDate = null;
         let guests = 1;
-        
-        // Price configuration
-        const prices = {
-            0: 185, // Sunday
-            1: 150, // Monday
-            2: 150, // Tuesday
-            3: 150, // Wednesday
-            4: 170, // Thursday
-            5: 210, // Friday
-            6: 220  // Saturday
-        };
+        let selectedProperty = null;
+        let properties = [];
 
-        // Unavailable dates (example)
-        const unavailable = [
-            '2025-05-10', '2025-05-11', '2025-05-12',
-            '2025-05-25', '2025-05-26'
-        ];
+        // Get property from URL parameter
+        function getPropertyFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('property');
+        }
+
+        // Load properties from API
+        async function loadProperties() {
+            try {
+                console.log('Loading properties from API...');
+                const response = await fetch('/api/properties');
+                const data = await response.json();
+
+                if (data.success) {
+                    properties = data.properties;
+                    console.log('Loaded properties:', properties);
+                    renderPropertySelector();
+                    
+                    // Auto-select property from URL if provided
+                    const urlProperty = getPropertyFromURL();
+                    if (urlProperty) {
+                        const property = properties.find(p => p.slug === urlProperty);
+                        if (property) {
+                            selectProperty(property);
+                        }
+                    }
+                    
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Failed to load properties:', error);
+                document.getElementById('loading').innerHTML = 
+                    '<div class="error">Failed to load properties. Please refresh the page.</div>';
+            }
+        }
+
+        // Render property selector
+        function renderPropertySelector() {
+            const container = document.getElementById('property-list');
+            container.innerHTML = '';
+
+            properties.forEach(property => {
+                const card = document.createElement('div');
+                card.className = 'property-card';
+                card.onclick = () => selectProperty(property);
+                
+                card.innerHTML = `
+                    <div class="property-name">${property.name}</div>
+                    <div class="property-details">
+                        ${property.description} • Max ${property.max_guests} guests
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Select property
+        function selectProperty(property) {
+            console.log('Selected property:', property);
+            selectedProperty = property;
+            
+            // Update visual selection
+            document.querySelectorAll('.property-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.property-card').classList.add('selected');
+            
+            // Update form
+            document.getElementById('form-property-id').value = property.id;
+            document.getElementById('form-property-name').value = property.name;
+            
+            // Update max guests
+            const maxGuests = property.max_guests;
+            if (guests > maxGuests) {
+                guests = maxGuests;
+                document.getElementById('guest-count').textContent = guests;
+            }
+            
+            // Regenerate calendar with new property data
+            generateCalendar();
+            updateDisplay();
+        }
+
+        // Get price for date and property
+        function getPrice(date) {
+            if (!selectedProperty) return 150;
+            
+            const dayOfWeek = date.getDay();
+            const priceKey = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dayOfWeek];
+            return selectedProperty[priceKey + '_price'] || 150;
+        }
+
+        // Check if date is unavailable for selected property
+        function isUnavailable(dateStr) {
+            if (!selectedProperty || !selectedProperty.unavailable_dates) return false;
+            
+            const unavailableDates = selectedProperty.unavailable_dates.split(',');
+            return unavailableDates.includes(dateStr);
+        }
 
         function formatDate(date) {
             return date.toLocaleDateString('en-US', {
@@ -301,14 +453,6 @@
                 month: 'short',
                 day: 'numeric'
             });
-        }
-
-        function getPrice(date) {
-            return prices[date.getDay()] || 150;
-        }
-
-        function isUnavailable(dateStr) {
-            return unavailable.includes(dateStr);
         }
 
         function generateCalendar() {
@@ -348,14 +492,14 @@
                 dayElement.className = 'calendar-day';
                 dayElement.innerHTML = `
                     ${day}
-                    <div class="price-display">${getPrice(date)}</div>
+                    ${selectedProperty ? `<div class="price-display">$${getPrice(date)}</div>` : ''}
                 `;
 
                 // Determine availability and styling
                 const isPast = date < new Date().setHours(0, 0, 0, 0);
                 const isUnavail = isUnavailable(dateStr);
                 
-                if (isPast || isUnavail) {
+                if (isPast || isUnavail || !selectedProperty) {
                     dayElement.classList.add('unavailable');
                 } else {
                     dayElement.classList.add('available');
@@ -413,7 +557,7 @@
             let nights = 0;
             let totalPrice = 0;
 
-            if (startDate && endDate) {
+            if (startDate && endDate && selectedProperty) {
                 nights = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
                 
                 // Calculate total price
@@ -437,7 +581,7 @@
 
             // Enable/disable book button
             const bookBtn = document.getElementById('book-btn');
-            bookBtn.disabled = !startDate || !endDate;
+            bookBtn.disabled = !startDate || !endDate || !selectedProperty;
 
             // Update hidden form fields
             document.getElementById('form-checkin').value = startDate ? startDate.toISOString().split('T')[0] : '';
@@ -453,7 +597,8 @@
         }
 
         function changeGuests(change) {
-            guests = Math.max(1, Math.min(8, guests + change));
+            const maxGuests = selectedProperty ? selectedProperty.max_guests : 8;
+            guests = Math.max(1, Math.min(maxGuests, guests + change));
             document.getElementById('guest-count').textContent = guests;
             updateDisplay();
         }
@@ -480,8 +625,11 @@
                     name: formData.get('name'),
                     email: formData.get('email'),
                     phone: formData.get('phone'),
-                    address: formData.get('address')
+                    address: formData.get('address'),
+                    property_id: parseInt(formData.get('property_id'))
                 };
+
+                console.log('Submitting booking:', bookingData);
 
                 // Try to save to database
                 const response = await fetch('/api/bookings', {
@@ -493,7 +641,7 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    alert('🎉 Booking confirmed! ID: ' + result.bookingId);
+                    alert(`🎉 Booking confirmed for ${result.propertyName}! Confirmation ID: ${result.bookingId}`);
                     // Also submit to Formspree
                     this.submit();
                 } else {
@@ -512,10 +660,8 @@
         };
 
         // Initialize
-        console.log('Initializing calendar...');
-        generateCalendar();
-        updateDisplay();
-        console.log('Simple booking system ready!');
+        console.log('Initializing dynamic booking system...');
+        loadProperties(); // Load properties first, then everything else follows
     </script>
 </body>
 </html>
